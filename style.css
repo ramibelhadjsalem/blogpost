@@ -1,0 +1,132 @@
+.forms{
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
+    background-image: url('./assets/544750.jpg');
+}
+.loginform{
+
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.281);
+    width: 500px;
+    height: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    /* box-shadow: 30px 30px 10px rgba(235, 232, 232, 0.247); */
+    user-select: none;
+   
+}
+.loginform h3{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 35px;
+    font-weight: 600;
+    margin-top: 50px;
+    margin-bottom: 30px; 
+    color:  #19447e;
+    opacity: 10;
+}
+.loginform .form-group{
+    display: flex ;
+    flex-direction: column;
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+.loginform .form-group input[type=text] {
+    
+    all: unset;
+    background-color: rgb(238, 238, 238);
+    opacity: 0.75;
+    width:80% ;
+    align-self: center;
+    text-align: center;
+    border: 2px solid #0000001f;
+    border-radius: 7px;
+    padding: 10px;
+}
+.loginform .form-group input[type=password]{
+    
+    all: unset;
+    background-color: rgb(238, 238, 238);
+    opacity: 0.75;
+    width:80% ;
+    align-self: center;
+    text-align: center;
+    border: 2px solid #0000001f;
+    border-radius: 7px;
+    padding: 10px;
+}
+.loginform .form-group input:focus{
+    border: 3px solid  #2675dd;
+}
+.login-btn{
+    all: unset;
+    width: 300px;
+    height: 50px;
+    background-color: #0f5cc2;
+    color: #fff;
+    font-size: 20px;
+    border-radius: 11px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+/* ***********************style for register ************************ */
+ .registerform{
+ 
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -35%);
+    width: 550px;
+    height: 450px;
+    overflow: hidden;
+
+}  
+
+.registerform h3{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 35px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 30px; 
+    color:  #19447e;
+    opacity: 10;
+   
+}
+.register-group{
+    width: 500px;
+    min-width: 500px;
+    height: 400px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.281);
+    border-radius: 20px;
+    margin: 20px;
+}
+.register-group .form-group{
+    display: flex ;
+    flex-direction: column;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+.input-filed{
+    all: unset;
+    background-color: rgb(238, 238, 238);
+    opacity: 0.75;
+    width:80% ;
+    align-self: center;
+    text-align: center;
+    border: 2px solid #0000001f;
+    border-radius: 7px;
+    padding: 10px;
+}
+.next-btn{
+    transform: translateX();
+}
+
+
+
