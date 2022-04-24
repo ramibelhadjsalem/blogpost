@@ -1,8 +1,16 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 .forms{
     background-size: cover;
     background-repeat: no-repeat;
     height: 100%;
     background-image: url('./assets/544750.jpg');
+    background-attachment: fixed;
+    
+   
 }
 .loginform{
 
@@ -73,11 +81,13 @@
     left: 50%;
     transform: translate(-50%, 0);
 }
+
 /* ***********************style for register ************************ */
  .registerform{
+    width: 500px;
+    min-width: 500px;
+    height: 400px;
  
-    display: flex;
-    flex-direction: row;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -92,20 +102,23 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: 35px;
     font-weight: 600;
-    margin-top: 20px;
+    margin-top: 30px;
     margin-bottom: 30px; 
     color:  #19447e;
     opacity: 10;
    
+   
 }
 .register-group{
-    width: 500px;
-    min-width: 500px;
-    height: 400px;
+    width: 100%;
+    height: 100%;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.281);
     border-radius: 20px;
     margin: 20px;
+    overflow-y: scroll;
+    padding: 20px;
+    
 }
 .register-group .form-group{
     display: flex ;
@@ -113,20 +126,237 @@
     margin-bottom: 30px;
     margin-top: 10px;
 }
-.input-filed{
+.form-control{
     all: unset;
     background-color: rgb(238, 238, 238);
     opacity: 0.75;
-    width:80% ;
+    width:450px ;
     align-self: center;
     text-align: center;
     border: 2px solid #0000001f;
     border-radius: 7px;
     padding: 10px;
 }
-.next-btn{
-    transform: translateX();
+
+.alert{
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.register-btn{
+    all: unset;
+    width: 400px;
+    background-color: #2675dd;
+    color: #fff;
+    padding: 10px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 10px;
+    position: relative;
+    left:8%
+
+}
+.register-group span{
+    font-size: 20px;
+    color: red;
+    font-weight: 600;
 }
 
 
+/* *********************style de home************************* */
 
+   body {
+    font-family: cursive;
+   }
+   a {
+    text-decoration: none;
+   }
+   li {
+    list-style: none;
+   }
+   /* NAVBAR STYLING STARTS */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    color: #fff;
+    margin:10px 50px ;
+   }
+   .nav-links a {
+    color: #fff;
+   }
+   /* LOGO */
+   .logo {
+    font-size: 32px;
+   }
+   /* NAVBAR MENU */
+   .menu {
+    display: flex;
+    gap: 1em;
+    font-size: 20px;
+   }
+   .menu li:hover {
+    background-color: rgba(255, 255, 255, 0.349);
+    border-radius: 5px;
+    transition: 0.3s ease;
+    text-decoration: none;
+   }
+   .menu li {
+    padding: 5px 14px;
+   }
+   .user{
+       display: flex;
+       flex-direction: row;
+       align-items: center;
+       padding: 5px 10px ;
+       border-radius: 5px;
+        transition: 0.3s ease;
+   }
+
+   .user img{
+       height: 30px;
+       width: 30px;
+       border-radius: 50%;
+        margin-right: 10px;
+   }
+   .user p{
+       font-size: 18px;
+       margin-top: 8px;
+   }
+   .user:hover{
+       background-color: rgba(255, 255, 255, 0.205);
+   }
+   .navbar .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+   .navbar .dropdown .dropdown-content{
+       display: none;
+       position: absolute;
+       background-color: rgba(255, 255, 255, 0.096);
+       min-width: 200px;
+       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+   }
+   .navbar .dropdown .dropdown-content a{
+       color: #fff;
+       text-decoration: none;
+       font-size: 18px;
+       margin:  10px 20px;
+     
+
+   }
+   .dropdown:hover .dropdown-content {
+    display: flex;
+    flex-direction: column;
+   
+  }
+.homebody{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+}
+
+
+  .newpost{
+    margin: auto;
+    width: 50%;
+    max-width: 600px;
+    background-color:rgba(255, 255, 255, 0.281) ;
+   
+    border-radius: 10px;
+    
+  }
+  .newpost .description{
+      display: flex;
+      flex-direction: row;
+      padding: 10px;
+      border-radius: 20px;
+      margin:10px 0;
+
+
+  }
+  .newpost .description img{
+      width: 60px;
+      height: 60px;
+      margin: 5px 10px;
+      border-radius: 50%;
+  }
+  .newpost .description input{
+
+    width: 100%;
+    opacity: 0.8;
+    padding-left: 20px;
+    border-radius: 20px;
+ 
+  }
+     
+  .newpost .photoinput{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 10px 20px 10px 20px;
+}
+
+.newpost .photoinput input[type=file]{
+    display: none;
+}
+
+  .newpost .photoinput img{
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+  }
+.sendlogo{
+  all: unset;
+
+}
+.sendlogo svg{
+    color:#19447e;
+    width: 40px;
+    height: 40px;
+   
+}
+/* ****************style de posts*************** */
+.newpost .userinfo{
+    display: flex;
+    flex-direction: row;
+
+}
+.newpost .userinfo img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.newpost .postphoto img{
+    width: 500px;
+    height: 500px;
+}
+.newpost .userinfo p{
+    font-size: 20px;
+    
+}
+.action{
+    background-color: rgba(255, 255, 255, 0.568);
+    height: 30px;
+    border-radius: 0 0 10px 10px;
+}
+.action button{
+    all: unset;
+    width: 30%;
+    cursor: pointer;
+
+}
+.action button svg{
+    width: 25px;
+    height: 25px;
+    color: red;
+    cursor: pointer;
+}
+.idpublication{
+    display: none;
+}
