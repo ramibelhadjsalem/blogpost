@@ -1,89 +1,120 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Ajax POST request with JQuery and PHP</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<style type="text/css">
-		body {
-			font-family: calibri;
-		}
-		.box {
-			margin-bottom: 10px;
-		}
-		.box label {
-			display: inline-block;
-			width: 80px;
-			text-align: right;
-			margin-right: 10px;
-		}
-		.box input, .box textarea {
-			border-radius: 3px;
-			border: 1px solid #ddd;
-			padding: 5px 10px;
-		}
-		.btn-submit {
-			margin-left: 90px;
-		}
-	</style>
-</head>
-<body>
-	<h2>Ajax POST request with JQuery and PHP - <a href="https://www.cluemediator.com" target="_blank">Clue Mediator</a></h2>
-	<form>
-		<div class="box">
-			<label>First Name:</label><input type="text" name="firstName" id="firstName" />
-		</div>
-		<div class="box">
-			<label>Last Name:</label><input type="text" name="lastName" id="lastName" />
-		</div>
-		<div class="box">
-			<label>Email:</label><input type="email" name="email" id="email" />
-		</div>
-		<div class="box">
-			<label>Message:</label><textarea type="text" name="message" id="message"></textarea>
-		</div>
-		<input id="submit2" type="button" class="btn-submit" value="Submit" />
-        
-	</form>
+<?php 
+	// connect to the database
+	require_once "../includes/database.php" ;
+
 	
-	<script>
-		$(document).ready(function() {
 
-			$("#submit").click(function() {
+	if (isset($_POST['liked'])) {
+		$postid = $_POST['postid'];
+		$result = mysqli_query($link, "SELECT * FROM publication WHERE id=$postid");
+		$row = mysqli_fetch_array($result);
+		
 
-				var firstName = $("#firstName").val();
-				var lastName = $("#lastName").val();
-				var email = $("#email").val();
-				var message = $("#message").val();
+		mysqli_query($link, "INSERT INTO likes (id_user, id_pub) VALUES (6, $postid)");
+		
 
-				if(firstName==''||lastName==''||email==''||message=='') {
-					alert("Please fill all fields.");
-					return false;
+		
+		exit();
+	}
+	if (isset($_POST['unliked'])) {
+		$postid = $_POST['postid'];
+		$result = mysqli_query($link, "SELECT * FROM publication WHERE id=$postid");
+		$row = mysqli_fetch_array($result);
+		
+
+		mysqli_query($link, "DELETE FROM likes WHERE id_pub=$postid AND id_user=6");
+		
+		
+		exit();
+	}
+
+	// Retrieve posts from the database
+	$posts = mysqli_query($link, "SELECT * FROM publication");
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<title>Like and unlike system</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+
+<body>
+	<!-- display posts gotten from the database  -->
+		<?php while ($row = mysqli_fetch_array($posts)) { ?>
+
+			<div class="post">
+				<?php echo $row['description']; ?>
+
+				<div style="padding: 2px; margin-top: 5px;">
+				<?php 
+					// determine if user has already liked this post
+					$results = mysqli_query($link, "SELECT * FROM likes WHERE id_user=6 AND id_pub=".$row['id']."");
+
+					if (mysqli_num_rows($results) == 1 ): ?>
+						<!-- user already likes post -->
+						<span class="unlike fa fa-thumbs-up" data-id="<?php echo $row['id']; ?>"></span> 
+						<span class="like hide fa fa-thumbs-o-up" data-id="<?php echo $row['id']; ?>"></span> 
+					<?php else: ?>
+						<!-- user has not yet liked post -->
+						<span class="like fa fa-thumbs-o-up" data-id="<?php echo $row['id']; ?>"></span> 
+						<span class="unlike hide fa fa-thumbs-up" data-id="<?php echo $row['id']; ?>"></span> 
+					<?php endif ?>
+
+					<span class="likes_count"><?php echo mysqli_num_rows(mysqli_query($link, "SELECT * FROM likes WHERE id_pub=".$row['id'])); ?> likes</span>
+				</div>
+			</div>
+
+		<?php } ?>
+
+
+<!-- Add Jquery to page -->
+
+<script>
+	$(document).ready(function(){
+		// when the user clicks on like
+		$('.like').on('click', function(){
+			var postid = $(this).data('id');
+			    $post = $(this);
+
+			$.ajax({
+				url: 'index.php',
+				type: 'post',
+				data: {
+					'liked': 1,
+					'postid': postid
+				},
+				success: function(response){
+					$post.parent().find('span.likes_count').text(response + " likes");
+					$post.addClass('hide');
+					$post.siblings().removeClass('hide');
 				}
-
-				$.ajax({
-					type: "POST",
-					url: "submission.php",
-					data: {
-						firstName: firstName,
-						lastName: lastName,
-						email: email,
-						message: message
-					},
-					cache: false,
-					success: function(data) {
-						console.log(data);
-					},
-					error: function(xhr, status, error) {
-						console.error(xhr);
-					}
-				});
-				
 			});
-
-            
-
 		});
-	</script>
-    
+
+		// when the user clicks on unlike
+		$('.unlike').on('click', function(){
+			var postid = $(this).data('id');
+		    $post = $(this);
+
+			$.ajax({
+				url: 'index.php',
+				type: 'post',
+				data: {
+					'unliked': 1,
+					'postid': postid
+				},
+				success: function(response){
+					$post.parent().find('span.likes_count').text(response + " likes");
+					$post.addClass('hide');
+					$post.siblings().removeClass('hide');
+				}
+			});
+		});
+	});
+</script>
 </body>
 </html>

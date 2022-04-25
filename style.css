@@ -341,13 +341,23 @@
     
 }
 .action{
+    
+    display: flex;
+    flex-direction: row;
     background-color: rgba(255, 255, 255, 0.568);
     height: 30px;
     border-radius: 0 0 10px 10px;
 }
+.action .btns{
+    width: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
 .action button{
     all: unset;
-    width: 30%;
+   
     cursor: pointer;
 
 }
@@ -358,5 +368,8 @@
     cursor: pointer;
 }
 .idpublication{
+    display: none;
+}
+.hide{
     display: none;
 }

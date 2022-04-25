@@ -1,7 +1,8 @@
 <?php 
+session_start();
 require_once "includes/database.php";
 
-$user_id = $_POST['userid'] ; 
+$user_id = $_SESSION["id"];  
 $pub_id = $_POST['postid'];
 $msg ="";
 if(!$user_id || !$pub_id){

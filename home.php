@@ -17,16 +17,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     require_once "includes/database.php";
     $posts = mysqli_query($link, "SELECT * FROM publication INNER JOIN appuser WHERE publication.id_user = appuser.Id");
 
-    // if (isset($_POST['liked'])) {
-	// 	$postid = $_POST['idpublication'];
-	// 	mysqli_query($link, "INSERT INTO likes (id_user,id_pub) VALUES ($id, $postid)");
-		
-		
-	// }
-    // if (isset($_POST['unliked'])) {
-	// 	$postid = $_POST['idpublication'];
-	// 	mysqli_query($link, "DELETE FROM likes WHERE id_pub=$postid AND id_user=$id");
-	// }
+   
 ?>
 
 
@@ -43,18 +34,23 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         home
     </title>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <script src="actions.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <link rel="stylesheet" href="style.css">
-   
+    
+    
 </head>
 <body class="forms">
 
 <nav class="navbar">
-    
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js" ></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
         <div class="logo">Blog Now</div>
         <ul class="nav-links">
@@ -123,161 +119,120 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     </div>
                 <?php endif ?>
                 <div class=' align-center text-center action'>
-                    <form method='post'>
-                       
-                        <?php 
+                    
+                <div class="btns">     
+                    <?php 
                         $results = mysqli_query($link, "SELECT * FROM likes WHERE id_user=".$id." AND id_pub=".$row['id']."");
-                        $count = mysqli_num_rows(mysqli_query($link, "SELECT id_like FROM likes WHERE id_pub=".$row['id'].""));
-                        if (mysqli_num_rows($results) == 0 ): ?>
+                        $res=mysqli_num_rows(mysqli_query($link, "SELECT id_pub FROM likes WHERE id_pub=".$row['id'].""));
+                        
+                        if (mysqli_num_rows($results) >= 1 ): ?>
+                            
                             <button 
-                            data-id="<?php echo $row['id']; ?>"
-                            data-userid='<?php echo $id ?>'
-                            class="<?php echo"like".$row['id'] ?>"
-                            id="liked" name='liked' >
-                                    <?php echo $count ?>
+                                class="unlike text-center"
+                                data-id="<?php echo $row['id'] ?>"
+                                onclick="removelike(<?php echo $row['id'] ?>)"
+                                >       <?php echo $res ?>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                        </svg>
+                            </button>
+                            <button
+                                class="like  d-none text-center"
+                                data-id="<?php echo $row['id'] ?>"
+                                onclick="addlike(<?php echo $row['id'] ?>)"
+                                >   
+                                    <?php echo $res-1 ?>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
                                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
                                     </svg>
                             </button>
-                            <!-- <button 
-                                    class="d-none <?php echo"unlike".$row['id'] ?>"
-                                    data-id="<?php echo $row['id']; ?>"
-                                    data-userid='<?php echo $id ?>'
-                                    id='unliked'>
-                                        <?php echo $count ?>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                                        </svg>
-                            </button> -->
+                           
                             <?php else: ?>
-                                <!-- <button 
-                                    class="d-none <?php echo"like".$row['id'] ?>"
-                                    data-id="<?php echo $row['id']; ?>"
-                                    data-userid='<?php echo $id ?>'
-                                    id="liked" name='liked' >
-                                        <?php echo $count ?>
+                                <button
+                                    class="like text-center"
+                                    data-id="<?php echo $row['id'] ?>"
+                                    onclick="addlike(<?php echo $row['id'] ?>)"
+                                    >
+                                        <?php echo $res ?>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
                                         <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                                            </svg>
-                                </button> -->
-                                <button 
-                                    class="<?php echo"unlike".$row['id'] ?>"
-                                    data-id="<?php echo $row['id']; ?>"
-                                    data-userid='<?php echo $id ?>'
-                                    id='unliked'>
-                                        <?php echo $count ?>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
                                         </svg>
-                            </button>
-                            <?php endif ?>    
-                        <button>Commentaire</button>
-                        <button>Partager</button>
-                    </form>
-                    
-    
-                </div>
+                                    </button>
+                                <button 
+                                    class="unlike d-none text-center"
+                                    data-id="<?php echo $row['id'] ?>"
+                                    onclick="removelike(<?php echo $row['id'] ?>)"
+                                    >   
+                                        <?php echo $res+1 ?>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                        </svg>
+                                </button>
+                                
+                            <?php endif ?>
+
+                        </div>
+                        <div class="btns">
+                            <button
+                            data-id="<?php echo $row['id'] ?>"
+                            class="commentaire"
+                            >Commentaire</button></div>
+                        <div class="btns">
+                            <button
+                                class="partage"
+                                data-id="<?php echo $row['id'] ?>"
+                                data-photo="<?php echo $row['photoUrl'] ?>"
+                                data-description="<?php echo $row['description'] ?>"
+                                > Partager</button></div> 
+                        </div>
         </div>
 
          <?php } ?>
         
     </div>
-    
+    <script>
+	$(document).ready(function(){
+		// when the user clicks on like
+		$('.like').on('click', function(){
+           
+			var postid = $(this).data('id');
+			
+			    $post = $(this);
+                $post.addClass('d-none');
+				$post.siblings().removeClass('d-none');
+			
+		});
+
+		// when the user clicks on unlike
+		$('.unlike').on('click', function(){
+            
+			var postid = $(this).data('id');
+		    $post = $(this);
+            $post.addClass('d-none');
+			$post.siblings().removeClass('d-none');
+
+			
+		});
+		$('.partage').on('click', function(){
+            
+			var postid = $(this).data('id');
+            var photoUrl = $(this).data('photo');
+			var description = $(this).data('description');
+          
+            partagerpub(postid , photoUrl,description)
+
+			
+		});
+		$('.commentaire').on('click', function(){
+            
+			<?php include './testes/index.php' ?>
+			
+		});
+		
+        
+	});
+</script>  
 </body>
 
 </html>
                     
-<script>
-		$(document).ready(function() {
-
-			$("#liked").click(function() {
-                var postid = $(this).data('id');
-                var userid = $(this).data('userid');
-                $post = $(this);
-                event.preventDefault();
-
-               
-                if(!postid || !userid){
-                    alert("oppss somthing wrong") ;
-                }
-                $.ajax({
-					type: "POST",
-					url: "addlike.php",
-					data: {
-						userid: userid,
-						postid:postid
-					},
-					cache: false,
-					success: function(data) {
-                       
-                        if(data="liked succesffuly"){
-                            console.log(data) ;
-                        //     var like = document.getElementsByClassName("like"+postid);
-                        //     var unlike = document.getElementsByClassName("unlike"+postid);
-                        //     like.classList.add("d-none");
-                        //    // like.addClass('d-none')
-                        //    // unlike.removeClass('d-none')
-                        //     unlike.classList.remove("d-none");
-                        //     // $post.parent().find('span.likes_count').text( + " likes");
-					    //     // $post.addClass('d-none');
-					    //     // $post.siblings().removeClass('d-none');
-                        }
-                        else{
-                         
-                        }
-						
-					},
-					error: function(xhr, status, error) {
-						console.error(xhr);
-					}
-				});
-
-				
-				
-			});
-			$("#unliked").click(function() {
-                var postid = $(this).data('id');
-                var userid = $(this).data('userid');
-                $post = $(this);
-				
-                event.preventDefault();
-
-                if(!postid || !userid){
-                    alert("oppss somthing wrong") ;
-                }
-                $.ajax({
-					type: "POST",
-					url: "removelike.php",
-					data: {
-						userid: userid,
-						postid:postid
-					},
-					cache: false,
-					success: function(data) {
-                       
-                        if(data="unliked succesffuly"){
-                            // var like = document.getElementsByClassName("like"+postid);
-                            // var unlike = document.getElementsByClassName("unlike"+postid);
-                            // unlike.classList.add('d-none')
-                            // // like.removeClass('d-none')
-                            // like.classList.remove("d-none");
-                        }
-                        else{
-                           
-                        }
-						
-					},
-					error: function(xhr, status, error) {
-						console.error(xhr);
-					}
-				});
-
-                
-				
-			});
-           
-
-		});
-	</script>
-    
-
