@@ -94,3 +94,47 @@ function partagerpub(postid ,photoUrl,description){
         });
 
 }
+function addComment(postid , comment){
+    var error= false;
+    res=false;
+    if(!comment || comment === 0 ){
+        toastr.error("comment is requiered");
+        error=true;
+    }else{
+        responce=$.ajax({
+            type: "POST",
+            url: "./phpactions/addcomment.php",
+            data: {
+                
+                postid:postid,
+                comment :comment
+                
+            },
+            cache: false,
+            success: function(data) {
+                console.log(data)
+                data =JSON.parse(data);
+                if(data =="commented succesffuly"){
+                    toastr.success(data);
+                    return true;
+                    
+                }
+                else{
+                    toastr.error(data);
+                   }
+                return data ; 
+            
+                
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr);
+            }
+        });
+        console.log(responce)
+        if(responce.state==200){
+            
+            res=true;
+        }
+    }
+    return res ; 
+}

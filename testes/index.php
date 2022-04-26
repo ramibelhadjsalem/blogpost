@@ -45,7 +45,7 @@
 <body>
 	<!-- display posts gotten from the database  -->
 		<?php while ($row = mysqli_fetch_array($posts)) { ?>
-
+			
 			<div class="post">
 				<?php echo $row['description']; ?>
 

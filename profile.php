@@ -1,62 +1,60 @@
 <?php
-// Initialize the session
-session_start();
- 
-// Check if the user is logged in, if not then redirect him to login page
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    header("location: login.php");
-    exit;
-}
-    $id= $_SESSION["id"];
-    $username=$_SESSION["username"];
-    $photoProfile=$_SESSION["photoprofile"];
-    if(strlen($photoProfile)<1){
-        $photoProfile="./assets/avatar.png";
+    session_start();
+    if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+        header("location: login.php");
+        exit;
     }
-
+    $currentuser=$_SESSION["id"];
+    $currentusername=$_SESSION["username"] ;
+    $currentuserphoto=$_SESSION["photoprofile"] ;
     require_once "includes/database.php";
-    $posts = mysqli_query($link, "SELECT * FROM publication INNER JOIN appuser WHERE publication.id_user = appuser.Id order by date DESC");
+    $id = intval($_GET['id']);
+    $result= mysqli_query($link, "SELECT * FROM appuser WHERE id=$id ");
+    // $row = mysql_fetch_row($userinfo);
+    while($row = mysqli_fetch_assoc($result)) {
+        if(strlen($row['photoprofile'])<1){
+            $photoUrl='assets/avatar.png';
+        }
+        else{
+            $photoUrl=$row['photoprofile'];
+        }
+        $username=$row['username'] ;
+        $firstname=$row['firstname'] ;
+        $lastename=$row['lastename'] ;
+        $number=$row['number'] ;
+        $dob=$row['dob'] ;
 
-   
+      }
+      $posts = mysqli_query($link, "SELECT * FROM publication INNER JOIN appuser WHERE publication.id_user = appuser.Id AND appuser.Id=$id order by date DESC");
+    
 ?>
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        home
-    </title>
-    <link rel="stylesheet" href="style.css">
+    <title>profile</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
     <script src="actions.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="profile.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    
-   
-    
 </head>
-<body class="forms">
-
-    <script src="http://code.jquery.com/jquery-2.0.3.min.js" ></script>
+<body>
+<script src="http://code.jquery.com/jquery-2.0.3.min.js" ></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <nav class="navbar">
+    
 
         <div class="logo">Blog Now</div>
         <ul class="nav-links">
             <div class="menu">
                 <li><a href="home.php">Home</a></li>
-                <li class="services"><a href="http://localhost/server/project/profile.php?id=<?php echo $id ?>">Profile</a></li>
+                <li class="services <?php if($currentuser==$id) echo 'active' ?>"><a href="http://localhost/server/project/profile.php?id=<?php echo $currentuser ?>">Profile</a></li>
                 <li><a href="/">Notification</a></li>
                 <li><a href="/">About</a></li>
                 <li><a href="/">Contact</a></li>
@@ -64,8 +62,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         </ul>
         <div class="dropdown">
             <div class="user">
-                <img src="<?php echo $photoProfile ?>"alt="avatar">
-                <p><?php echo $username ?></p>
+                <img src='<?php echo $currentuserphoto ?>' alt="avatar">
+                <p><?php echo $currentusername?></p>
             </div>
            
             <div class="dropdown-content">
@@ -73,49 +71,75 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                 <a href="changePassword.php">change Password</a>
             </div>
         </div>
-    </nav>
-    <div class="homebody">
-        <div class="newpost">
-            <form  method="POST" 
-              action="uploadimg.php" 
-              enctype="multipart/form-data">
-            <div class="description">
-                <img src="<?php echo $photoProfile ?>"alt="avatar">
-                <input type="text" name='description' id="description"  placeholder="whats new <?php echo $username ?> !!">
+</nav>
+<div class="container1 ">
+       <div class="userinfo">
+           <div class="photocoverture">
+           <?php if($currentuser==$id) :?>
+               <div class="addphotocover">
+                   <input class="d-none" type="file" name="photocoverture" id="photocoverture">
+                   <label for="photocoverture"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                        <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
+                        </svg>
+                    </label>
+              
             </div>
-            <div class="photoinput">
-                <label for="uploadf"><img src='./assets/galerielogo.webp'> Add Photo ??</label>
-                <input type="file" 
-                   name="uploadfile" 
-                   id="uploadf"
-                   value="" />
-                <button class="sendlogo" type="submit" name="upload"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
-                </svg></button>
-               
-                
+            <?php endif ?>
+          
+               <!-- <img class="w-100 h-100" src="assets/avatar.png" alt=""> -->
+           </div>
+           <div class="userdetail">
+                <img src="<?php echo $photoUrl ?>" alt="">
+                <h3><?php echo $username?></h3>
+           </div>
+           
+       </div>
+</div>
+<div class="profilebody">
+    <div class="container2">
+        <div class="side-left">
+        <?php if($currentuser==$id) :?>
+            <div class="updateinfo">
+                <h5 class="title text-center">Changer les information</h3>
+                <div class="form-group ">
+                    <input type="text" value='<?php echo $username ?>' placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <input type="text" value='<?php echo $firstname ?>' placeholder="Firstname">
+                </div>
+                <div class="form-group">
+                    <input type="text" value='<?php echo $lastename ?>' placeholder="Lastname">
+                </div>
+                <div class="form-group">
+                    <input type="text" value='<?php echo $number ?>' placeholder="Phone Number">
+                </div>
+                <div class="form-group">
+                    <input type="date" value='<?php echo $dob ?>' placeholder="Date de naissance">
+                </div>
+                <div class="form-group">
+                    <button>Changer</button>
+                </div>
             </div>
-            </form>
+        <?php endif ?>
         </div>
-        <?php while ($row = mysqli_fetch_array($posts)) {?>
-            <div class="newpost mt-5 ">
-                <a class="userinfo m-2" href='/server/project/profile.php?id=<?php echo $row['Id']?>'>
-                    <img class="rounded-circle" src=<?php if(strlen($row['photoprofile'])>1){
-                        echo $row["photoprofile"];
-
-                    }else{
-                        echo "./assets/avatar.png";
-                    } ?> alt="avatar">
-                    <p class="ml-4 mt-2 "><?php echo $row['username'] ?></p>
-                </a>
+        <div class="side-right">
+            <div class="posts ">
+            <?php while ($res1 = mysqli_fetch_array($posts)) {?>
+            <div class="newpost mb-3 ">
+                <div class="userinfo ">
+                    <img class="rounded-circle m-2 ml-4" src='<?php echo $photoUrl ?>' alt="avatar">
+                    <p class="ml-3 mt-2 "><?php echo $username ?></p>
+                </div>
                
                 <div class="postdescription px-4">
-                    <p><?php echo $row['description'] ?></p>
+                    <p><?php echo $res1['description'] ?></p>
                 </div>
-                <?php if(strlen($row['photoUrl'])>0) :?>
+                <?php if(strlen($res1['photoUrl'])>0) :?>
                 
                     <div class="postphoto mb-0 w-100">
-                        <img class="w-100" src="<?php echo $row['photoUrl'] ?>" alt="">
+                        <img class="w-100" src="<?php echo $res1['photoUrl'] ?>" alt="">
                     </div>
                 <?php endif ?>
                
@@ -123,15 +147,15 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     
                 <div class="btns">     
                     <?php 
-                        $results = mysqli_query($link, "SELECT * FROM likes WHERE id_user=".$id." AND id_pub=".$row['id']."");
-                        $res=mysqli_num_rows(mysqli_query($link, "SELECT id_pub FROM likes WHERE id_pub=".$row['id'].""));
+                        $results = mysqli_query($link, "SELECT * FROM likes WHERE id_user=".$currentuser." AND id_pub=".$res1['id']."");
+                        $res=mysqli_num_rows(mysqli_query($link, "SELECT id_pub FROM likes WHERE id_pub=".$res1['id'].""));
                         
                         if (mysqli_num_rows($results) >= 1 ): ?>
                             
                             <button 
                                 class="unlike text-center"
-                                data-id="<?php echo $row['id'] ?>"
-                               
+                                data-id="<?php echo $res1['id'] ?>"
+                                onclick="removelike(<?php echo $res1['id'] ?>)"
                                 >       <?php echo $res ?>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
@@ -139,8 +163,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                             </button>
                             <button
                                 class="like  d-none text-center"
-                                data-id="<?php echo $row['id'] ?>"
-                                
+                                data-id="<?php echo $res1['id'] ?>"
+                                onclick="addlike(<?php echo $res1['id'] ?>)"
                                 >   
                                     <?php echo $res-1 ?>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
@@ -151,8 +175,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                             <?php else: ?>
                                 <button
                                     class="like text-center"
-                                    data-id="<?php echo $row['id'] ?>"
-                                   
+                                    data-id="<?php echo $res1['id'] ?>"
+                                    onclick="addlike(<?php echo $res1['id'] ?>)"
                                     >
                                         <?php echo $res ?>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
@@ -161,8 +185,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                                     </button>
                                 <button 
                                     class="unlike d-none text-center"
-                                    data-id="<?php echo $row['id'] ?>"
-                                   
+                                    data-id="<?php echo $res1['id'] ?>"
+                                    onclick="removelike(<?php echo $res1['id'] ?>)"
                                     >   
                                         <?php echo $res+1 ?>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
@@ -175,7 +199,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                         </div>
                         <div class="btns">
                             <button
-                            data-id="<?php echo $row['id'] ?>"
+                            data-id="<?php echo $res1['id'] ?>"
                             class="commentaire"
                             >Commentaire</button>
                            
@@ -183,9 +207,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                         <div class="btns">
                             <button
                                 class="partage"
-                                data-id="<?php echo $row['id'] ?>"
-                                data-photo="<?php echo $row['photoUrl'] ?>"
-                                data-description="<?php echo $row['description'] ?>"
+                                data-id="<?php echo $res1['id'] ?>"
+                                data-photo="<?php echo $res1['photoUrl'] ?>"
+                                data-description="<?php echo $res1['description'] ?>"
                                 > Partager</button></div> 
                             </div>
                         <div  class="commentairepopup d-none">
@@ -198,11 +222,17 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                                 </div>
                                 <div class="commentbody mt-1">
                                     <?php
-                                        $results = mysqli_query($link, "SELECT * FROM comment INNER JOIN appuser WHERE comment.actionnaire_id=appuser.id And comment.pub_id=".$row['id']."");  
+                                        $results = mysqli_query($link, "SELECT * FROM comment INNER JOIN appuser WHERE comment.actionnaire_id=appuser.id And comment.pub_id=".$res1['id']."");  
                                         while ($res = mysqli_fetch_array($results)) {
                                         ?>
                                             <div class="comment">
-                                            <img src="./assets/avatar.png" alt="">
+                                                <?php if(strlen($res['photoprofile'])>1) :?>
+                                                        <img  src=<?php echo $res['photoprofile'] ?> alt="">
+                                                    
+                                                <?php else: ?> 
+                                                    <img  src="assets/avatar.png" alt="">
+                                                <?php endif ?>
+                                           
                                                 <p><?php echo $res['commentaire']?></p>
                                             </div> 
                                         <?php } ?>
@@ -212,7 +242,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                                         <input  id="commenttext" type="text" name="" id="" placeholder='Ecrire un commentaire'>
                                         <button 
                                             class='sendcomment'
-                                            data-id="<?php echo $row['id'] ?>"
+                                            data-id="<?php echo $res1['id'] ?>"
+                                            data-userphoto="<?php echo $photoUrl ?>"
                                             class="text-center d-flex justify-content-center"
                                             
                                             >Commenter
@@ -229,9 +260,11 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 
                
                 <?php } ?>
-        
+            </div>
         </div>
-    <script>
+    </div>
+</div>
+<script>
 	$(document).ready(function(){
 		// when the user clicks on like
 		$('.like').on('click', function(){
@@ -286,24 +319,27 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         $('.sendcomment').on('click', function(){
             
 			var postid = $(this).data('id');
+			var userphoto = $(this).data('userphoto');
             $comment=$(this).siblings().val()
           
             $commentList=$(this).parent().parent().find('.commentbody')
            
             addComment(postid,$comment);
            
-            $commentList.append(`<div class="comment"><img class="rounded-circle" src="assets/avatar.png"></img><p>${$comment}</p></div>`);
+            $commentList.append(`<div class="comment"><img class="rounded-circle" src="${userphoto}"></img><p>${$comment}</p></div>`);
             $comment=$(this).siblings().val("")
           
           
 
 			
 		});
+        $( "#photocoverture" ).change(function() {
+            var imgUrl = $(this)
+            console.log(img.val());
+        });
 		
         
 	});
-</script>  
+</script>
 </body>
-
 </html>
-                    

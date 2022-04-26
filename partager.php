@@ -22,9 +22,10 @@
             $msg = "Ouwn Post";
 
         }else{
-            $sql = "INSERT INTO publication ( photoUrl ,description , id_user) VALUES (?, ?, ? )";
+            $sql = "INSERT INTO publication ( photoUrl ,description , id_user,date) VALUES (?, ?, ? ,?)";
             $stmt = mysqli_prepare($link, $sql);
-            mysqli_stmt_bind_param($stmt, "sss", $photoUrl,$pub_description,$user_id);
+            $time=time();
+            mysqli_stmt_bind_param($stmt, "ssss", $photoUrl,$pub_description,$user_id,$time);
             if(mysqli_stmt_execute($stmt))
             {
                 $msg="partaged" ;
