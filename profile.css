@@ -122,12 +122,13 @@ body {
        
    }
    .container1 .userinfo .photocoverture{
-       height: 300px;
+       height: 400px;
        max-width: 100%;
        z-index: 1000;
        background: linear-gradient(#a5a5a5c0, #6160606b);
        margin: auto;
        border-radius: 30px;
+       
       
    }
    .container1 .userinfo .photocoverture .addphotocover
@@ -142,12 +143,12 @@ body {
         justify-content: center;
         align-items: center;
         position:absolute;
-        bottom:-280px;
+        bottom:-380px;
         right:40px;
        background-color: rgba(255, 255, 255, 0.788);
        border-radius: 30%;
    }
-   .container1 .userinfo .photocoverture svg{
+   .container1 .userinfo .photocoverture  svg{
        width: 30px;
        height: 30px;
        color: #0e0ebbad;
@@ -155,6 +156,7 @@ body {
    .container1 .userinfo .photocoverture img{
        height: 100%;
        width: 100%;
+       border-radius: 20px;
    }
    .container1 .userinfo .userdetail {
        display:flex;
@@ -439,4 +441,67 @@ body {
     padding: 5px;
     font-weight: 500;
     cursor: pointer;
+}
+
+.container2 .photos{
+    /* display:flex ;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around; */
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 20px;
+    border-radius: 20px;
+}  
+.container2 .photoconatiner{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-height: 230px;
+    min-height: 100px;
+    overflow-y: scroll;
+    scrollbar-width: none; /* For Firefox */
+}
+.container2 .photoconatiner::-webkit-scrollbar{
+    display: none;
+    width: 0px;
+}
+.container2 .photos h4{
+    font-size: 25px;
+    font-weight: 600;
+    color: #163a69;
+    margin-left: 20px;
+}
+.container2 .photos .photo{
+    width: 30%;
+    height: same-as-width;
+    margin: 5px;
+    border-radius: 5px;
+}
+.container2 .photos .photo img{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.userdetail .photoprofile .addphotoprofile{
+    position:relative ;
+}
+.userdetail .photoprofile .addphotoprofile label{
+        height: 40px;
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        /* bottom:-10% ; */
+        top: 140px;
+        right: 0;
+        background-color: rgba(255, 255, 255, 0.788);
+        border-radius: 30%;
+}
+.userdetail .photoprofile .addphotoprofile label svg{
+    width: 30px;
+height: 30px;
+color: #0e0ebbad;
 }

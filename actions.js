@@ -138,3 +138,69 @@ function addComment(postid , comment){
     }
     return res ; 
 }
+function addcoverphoto(imgurl){
+    $.ajax({
+        type: "POST",
+        url: "./phpactions/addphotocover.php",
+        data: {
+            
+            imgurl:imgurl,
+           
+            
+        },
+        cache: false,
+        success: function(data) {
+            console.log(data)
+            //data =JSON.parse(data);
+            if(data =="commented succesffuly"){
+                toastr.success(data);
+                return true;
+                
+            }
+            else{
+                toastr.error(data);
+               }
+            return data ; 
+        
+            
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr);
+        }
+    });
+}
+function updateinfo(username,firstname,lastname,number,dob){
+    $.ajax({
+        type: "POST",
+        url: "./phpactions/updateinfo.php",
+        data: {
+            
+            username:username,
+            firstname:firstname,
+            lastname:lastname,
+            number:number,
+            dob:dob,
+           
+            
+        },
+        cache: false,
+        success: function(data) {
+            
+            data =JSON.parse(data);
+            if(data =="updated"){
+                toastr.success(data);
+                return true;
+                
+            }
+            else{
+                toastr.error(data);
+               }
+            return data ; 
+        
+            
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr);
+        }
+    });
+}

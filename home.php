@@ -59,7 +59,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                 <li class="services"><a href="http://localhost/server/project/profile.php?id=<?php echo $id ?>">Profile</a></li>
                 <li><a href="/">Notification</a></li>
                 <li><a href="/">About</a></li>
-                <li><a href="/">Contact</a></li>
+                <li><a href="chatbox.php">Contact</a></li>
             </div>
         </ul>
         <div class="dropdown">
@@ -99,7 +99,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         </div>
         <?php while ($row = mysqli_fetch_array($posts)) {?>
             <div class="newpost mt-5 ">
-                <a class="userinfo m-2" href='/server/project/profile.php?id=<?php echo $row['Id']?>'>
+                <a class="userinfo m-2 text-decoration-none" href='/server/project/profile.php?id=<?php echo $row['Id']?>'>
                     <img class="rounded-circle" src=<?php if(strlen($row['photoprofile'])>1){
                         echo $row["photoprofile"];
 

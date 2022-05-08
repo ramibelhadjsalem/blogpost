@@ -13,7 +13,7 @@
     // $row = mysql_fetch_row($userinfo);
     while($row = mysqli_fetch_assoc($result)) {
         if(strlen($row['photoprofile'])<1){
-            $photoUrl='assets/avatar.png';
+            $photoUrl='./assets/avatar.png';
         }
         else{
             $photoUrl=$row['photoprofile'];
@@ -23,9 +23,11 @@
         $lastename=$row['lastename'] ;
         $number=$row['number'] ;
         $dob=$row['dob'] ;
+        $coverphoto=$row['coverphotoUrl'] ;
 
       }
       $posts = mysqli_query($link, "SELECT * FROM publication INNER JOIN appuser WHERE publication.id_user = appuser.Id AND appuser.Id=$id order by date DESC");
+      $photos=mysqli_query($link , "SELECT * FROM img WHERE id_user =$id");
     
 ?>
 <!DOCTYPE html>
@@ -41,7 +43,7 @@
     <script src="actions.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="profile.css?<?php echo time(); ?>">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 </head>
 <body>
@@ -76,9 +78,9 @@
        <div class="userinfo">
            <div class="photocoverture">
            <?php if($currentuser==$id) :?>
-               <div class="addphotocover">
-                   <input class="d-none" type="file" name="photocoverture" id="photocoverture">
-                   <label for="photocoverture"> 
+               <div class="addphotocover ">
+                   <input class="d-none" type="file" name="photocoverture" id="sortpicture">
+                   <label for="sortpicture"> 
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16">
                         <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
                         <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
@@ -88,10 +90,26 @@
             </div>
             <?php endif ?>
           
-               <!-- <img class="w-100 h-100" src="assets/avatar.png" alt=""> -->
+               <img class="image2 <?php if(strlen($coverphoto)<1) echo 'd-none'?>" src="<?php echo $coverphoto ?>" alt="">
+              
            </div>
            <div class="userdetail">
-                <img src="<?php echo $photoUrl ?>" alt="">
+                <div class="photoprofile">
+                    <?php if($currentuser==$id) :?>
+                            <div class="addphotoprofile ">
+                                <input class="d-none" type="file" name="photocoverture" id="sortpictureprofile">
+                                <label for="sortpictureprofile"> 
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16">
+                                        <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                        <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
+                                        </svg>
+                                </label>
+                            
+                            </div>
+                    <?php endif ?>
+                    <img class="img3" src="<?php echo $photoUrl ?>" alt="">
+                </div>
+                
                 <h3><?php echo $username?></h3>
            </div>
            
@@ -101,30 +119,39 @@
     <div class="container2">
         <div class="side-left">
         <?php if($currentuser==$id) :?>
-            <div class="updateinfo">
+            <div class="updateinfo mb-3">
                 <h5 class="title text-center">Changer les information</h3>
                 <div class="form-group ">
-                    <input type="text" value='<?php echo $username ?>' placeholder="Username">
+                    <input type="text" value='<?php echo $username ?>' id='Username' placeholder="Username">
                 </div>
                 <div class="form-group">
-                    <input type="text" value='<?php echo $firstname ?>' placeholder="Firstname">
+                    <input type="text" value='<?php echo $firstname ?>' id='Firstname'  placeholder="Firstname">
                 </div>
                 <div class="form-group">
-                    <input type="text" value='<?php echo $lastename ?>' placeholder="Lastname">
+                    <input type="text" value='<?php echo $lastename ?>' id='Lastname'  placeholder="Lastname">
                 </div>
                 <div class="form-group">
-                    <input type="text" value='<?php echo $number ?>' placeholder="Phone Number">
+                    <input type="text" value='<?php echo $number ?>' id='number'  placeholder="Phone Number">
                 </div>
                 <div class="form-group">
-                    <input type="date" value='<?php echo $dob ?>' placeholder="Date de naissance">
+                    <input type="date" value='<?php echo $dob ?>' id='dob'  placeholder="Date de naissance">
                 </div>
                 <div class="form-group">
-                    <button>Changer</button>
+                    <button class="updateinfos">Changer</button>
                 </div>
             </div>
         <?php endif ?>
+        <div class="photos mb-3">
+            <h4 class="title">Photos</h4>
+            <div class="photoconatiner">
+                <?php while($res2 =mysqli_fetch_array($photos)) {?>
+                    <div class="photo"><img src="<?php echo $res2['imgurl'] ?>" alt=""></div>
+                <?php }?>
+            </div>
+        </div>
         </div>
         <div class="side-right">
+            
             <div class="posts ">
             <?php while ($res1 = mysqli_fetch_array($posts)) {?>
             <div class="newpost mb-3 ">
@@ -333,12 +360,111 @@
 
 			
 		});
-        $( "#photocoverture" ).change(function() {
-            var imgUrl = $(this)
-            console.log(img.val());
+        $( "#sortpicture" ).change(function() {
+            var input = $("#sortpicture").val();
+            var file_data = $('#sortpicture').prop('files')[0];   
+            var form_data = new FormData();                  
+            form_data.append('file', file_data);
+            $.ajax({
+                url: './phpactions/addphotocover.php', // <-- point to server-side PHP script 
+                dataType: 'text',  // <-- what to expect back from the PHP script, if anything
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,                         
+                type: 'post',
+                success: function(data){
+                    //data =JSON.parse(data);
+                    if(data = "added"){
+                        toastr.success("Changed succesffuly");
+                        $(".image2").attr("src",`./imgs/${input.split(/[\\/]/).pop()}`);
+
+                    }
+                    else{
+                        toastr.error("Something went wrong")
+                    }
+                }
+            });
+        });
+        $( "#sortpictureprofile" ).change(function() {
+            var input = $("#sortpictureprofile").val();
+            var file_data = $('#sortpictureprofile').prop('files')[0];   
+            var form_data = new FormData();                  
+            form_data.append('file', file_data);
+            $.ajax({
+                url: './phpactions/addphotocover.php', // <-- point to server-side PHP script 
+                dataType: 'text',  // <-- what to expect back from the PHP script, if anything
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,                         
+                type: 'post',
+                success: function(data){
+                    //data =JSON.parse(data);
+                    if(data = "added"){
+                        toastr.success("Changed succesffuly");
+                        $(".img3").attr("src",`./imgs/${input.split(/[\\/]/).pop()}`);
+
+                    }
+                    else{
+                        toastr.error("Something went wrong")
+                    }
+                }
+            });
         });
 		
-        
+        $('.updateinfos').on('click', function(){
+            
+			var usernameinput=document.getElementById('Username');
+			var firstnameinput=document.getElementById('Firstname');
+			var lastnameinput=document.getElementById('Lastname');
+			var numberinput=document.getElementById('number');
+			var dobinput=document.getElementById('dob');
+            // console.log(usernameinput.empty)
+            if(usernameinput.value==''){
+                
+                usernameinput.style.borderColor ='red'
+                timer = setTimeout(function() {
+                    // reset CSS
+                    usernameinput.style.borderColor =''
+                }, 5000); 
+            }
+            if(firstnameinput.value==''){
+                firstnameinput.style.borderColor ='red'
+                timer = setTimeout(function() {
+                    // reset CSS
+                    firstnameinput.style.borderColor =''
+                }, 5000); 
+            }
+            if(lastnameinput.value==''){
+                lastnameinput.style.borderColor ='red'
+                timer = setTimeout(function() {
+                    // reset CSS
+                    lastnameinput.style.borderColor =''
+                }, 5000); 
+            }
+            if(numberinput.value==''){
+                numberinput.style.borderColor ='red'
+                timer = setTimeout(function() {
+                    // reset CSS
+                    numberinput.style.borderColor =''
+                }, 5000); 
+            }
+            if(dobinput.value==''){
+                dobinput.style.borderColor ='red'
+                timer = setTimeout(function() {
+                  
+                    dobinput.style.borderColor =''
+                }, 5000); 
+            }
+             
+			if(!usernameinput.value==''&&!firstnameinput.value==""&&!lastnameinput.value==""&&!numberinput.value==""&&!dobinput.value==""){
+                updateinfo(usernameinput.value,firstnameinput.value,lastnameinput.value,numberinput.value,dobinput.value);
+          
+            }else{
+                toastr.error("complete the fields")
+            }
+		});
 	});
 </script>
 </body>
